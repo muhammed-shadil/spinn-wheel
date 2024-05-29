@@ -29,7 +29,7 @@ class WheelPage extends StatefulWidget {
 }
 
 class ExamplePageState extends State<WheelPage> {
-   StreamController<int> selected = StreamController<int>();
+  int selected = 0;
 
   final ConfettiController _controllerCenterRight =
       ConfettiController(duration: const Duration(seconds: 5));
@@ -46,7 +46,7 @@ class ExamplePageState extends State<WheelPage> {
 
   @override
   void dispose() {
-    selected.close();
+    // selected.close();
     textController.dispose();
     super.dispose();
   }
@@ -56,7 +56,6 @@ class ExamplePageState extends State<WheelPage> {
       if (textController.text.isNotEmpty) {
         items.add(textController.text);
         textController.clear();
-        
       }
     });
   }
@@ -80,9 +79,8 @@ class ExamplePageState extends State<WheelPage> {
                     ? GestureDetector(
                         onTap: () {
                           setState(() {
-                            selected.add(
-                              Fortune.randomInt(0, items.length),
-                            );
+                            selected = Fortune.randomInt(0, items.length);
+
                             print("ssssssssssssssssss$selected");
                           });
                         },
@@ -96,11 +94,10 @@ class ExamplePageState extends State<WheelPage> {
                                 builder: (ctx) {
                                   return Stack(
                                     children: [
-                                    
                                       AlertDialog(
                                         title: const Center(
                                             child: Text("CONGRATULATIONS")),
-                                        content: Text(" items[selected!]"),
+                                        content: Text(items[selected]),
                                         actions: <Widget>[
                                           ElevatedButton(
                                               onPressed: () {
@@ -108,7 +105,8 @@ class ExamplePageState extends State<WheelPage> {
                                               },
                                               child: Text('ok'))
                                         ],
-                                      ),  Align(
+                                      ),
+                                      Align(
                                         alignment: Alignment.center,
                                         child: ConfettiWidget(
                                           confettiController:
@@ -126,12 +124,14 @@ class ExamplePageState extends State<WheelPage> {
                                   );
                                 });
                           },
-                          selected: selected.stream,
+                          // selected: selected,
                           items: [
                             for (int i = 0; i < items.length; i++)
                               FortuneItem(
                                 child: Text(items[i]),
-                                style: FortuneItemStyle(borderColor: Colors.white,borderWidth: 4,textStyle:TextStyle(fontSize: 18) ,
+                                style: FortuneItemStyle(
+                                  borderColor: Colors.white, borderWidth: 4,
+                                  textStyle: TextStyle(fontSize: 18),
                                   color: colors[i %
                                       colors.length], // Cycle through colors
                                 ),
